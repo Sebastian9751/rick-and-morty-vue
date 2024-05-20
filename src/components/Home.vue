@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import logo from "../assets/logo.png";
+import gitLogo from "../assets/git.png";
 import { ref, onMounted, onUnmounted } from "vue";
 import { Character, ApiResponse } from "../Models/index";
 
@@ -76,7 +77,14 @@ onUnmounted(() => {
   <main
     class="flex gap-8 items-center flex-col bg-black h-screen text-white text-[0.8rem] relative"
   >
-    <span></span>
+    <a
+      href="https://github.com/Sebastian9751/rick-and-morty-vue"
+      target="_blank"
+      class="flex justify-around items-center absolute z-30 italic font-bold text-sm bottom-5 left-4 animate-pulse"
+    >
+      Sebastian9751 <img class="ml-2 w-4" :src="gitLogo" />
+    </a>
+
     <header class="flex justify-center w-[100%] h-[20vh]">
       <img :src="logo" />
     </header>
@@ -93,35 +101,33 @@ onUnmounted(() => {
     <span v-if="loading">Loading...</span>
     <section
       v-else
-      class="grid grid-cols-3 gap-6 h-[100vh] overflow-y-scroll bg-black w-[75%]"
+      class="grid grid-cols-3 gap-6 min-h-[25vh] overflow-y-scroll bg-black w-[75%]"
     >
       <div
         v-for="character in characters"
         :key="character.id"
-        class="flex gap-2 justify-center items-center border rounded-lg border-blue-500 brightness-50 transition duration-300 ease-in-out hover:brightness-100 hover:border-green-500 "
+        class="flex gap-2 justify-center items-center border rounded-lg border-blue-500 brightness-50 transition duration-300 ease-in-out hover:brightness-100 hover:border-green-500 h-[100%]"
       >
-        <img
-          :src="character.image"
-          class="w-[50%] rounded-full p-1 "
-        />
+        <img :src="character.image" class="w-[50%] rounded-full p-1" />
         <section
-          class="flex flex-col justify-center gap-3 text-left w-[50%] h-[100%] p-2 child:flex child:flex-col "
+          class="flex flex-col justify-center gap-3 text-left w-[50%] h-[100%] p-2 child:flex child:flex-col"
         >
           <p class="text-[1rem] font-bold">{{ character.name }}</p>
 
           <p>
-           <span class="text-sm"> Origin </span>
-            <span class="font-bold "> {{ character.origin.name }} </span>
+            <span class="text-sm"> Origin </span>
+            <span class="font-bold"> {{ character.origin.name }} </span>
           </p>
           <p>
             <span class="text-sm"> Last location </span>
-             <span class="font-bold "> {{ character.location.name }} </span>
-           </p>
+            <span class="font-bold"> {{ character.location.name }} </span>
+          </p>
 
-           <p>
-    
-             <span class=" hover:animate-pulse text-sm">  Appears on {{ character.episode.length }} episodes</span>
-           </p>
+          <p>
+            <span class="hover:animate-pulse text-sm">
+              Appears on {{ character.episode.length }} episodes</span
+            >
+          </p>
         </section>
       </div>
     </section>
