@@ -97,39 +97,41 @@ onUnmounted(() => {
         @input="findCharacter"
       />
     </section>
-
+    <span v-if="characters.length < 1">Not found</span>
     <span v-if="loading">Loading...</span>
+    
+<section
+  v-else
+  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 min-h-[25vh] overflow-y-scroll bg-black w-full sm:w-[82%]"
+>
+  <div
+    v-for="character in characters"
+    :key="character.id"
+    class="flex gap-2 justify-center items-center border rounded-lg border-blue-500 brightness-50 transition duration-300 ease-in-out hover:brightness-100 hover:border-green-500 h-[100%]"
+  >
+    <img :src="character.image" class="w-[50%] sm:w-[40%] md:w-[50%] rounded-full p-1" />
     <section
-      v-else
-      class="grid grid-cols-3 gap-6 min-h-[25vh] overflow-y-scroll bg-black w-[75%]"
+      class="flex flex-col justify-center gap-3 text-left w-[50%] sm:w-[60%] md:w-[50%] h-[100%] p-2 child:flex child:flex-col"
     >
-      <div
-        v-for="character in characters"
-        :key="character.id"
-        class="flex gap-2 justify-center items-center border rounded-lg border-blue-500 brightness-50 transition duration-300 ease-in-out hover:brightness-100 hover:border-green-500 h-[100%]"
-      >
-        <img :src="character.image" class="w-[50%] rounded-full p-1" />
-        <section
-          class="flex flex-col justify-center gap-3 text-left w-[50%] h-[100%] p-2 child:flex child:flex-col"
+      <p class="text-[1rem] font-bold">{{ character.name }}</p>
+
+      <p>
+        <span class="text-sm"> Origin </span>
+        <span class="font-bold"> {{ character.origin.name }} </span>
+      </p>
+      <p>
+        <span class="text-sm"> Last location </span>
+        <span class="font-bold"> {{ character.location.name }} </span>
+      </p>
+
+      <p>
+        <span class="hover:animate-pulse text-sm">
+          Appears on {{ character.episode.length }} episodes</span
         >
-          <p class="text-[1rem] font-bold">{{ character.name }}</p>
-
-          <p>
-            <span class="text-sm"> Origin </span>
-            <span class="font-bold"> {{ character.origin.name }} </span>
-          </p>
-          <p>
-            <span class="text-sm"> Last location </span>
-            <span class="font-bold"> {{ character.location.name }} </span>
-          </p>
-
-          <p>
-            <span class="hover:animate-pulse text-sm">
-              Appears on {{ character.episode.length }} episodes</span
-            >
-          </p>
-        </section>
-      </div>
+      </p>
     </section>
+  </div>
+</section>
+
   </main>
 </template>
