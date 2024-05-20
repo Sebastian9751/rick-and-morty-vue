@@ -4,6 +4,7 @@ import gitLogo from "../assets/git.png";
 import { ref, onMounted, onUnmounted } from "vue";
 import { Character, ApiResponse } from "../Models/index";
 
+const BASE_URL = "https://rickandmortyapi.com/api/character";
 const characters = ref<Character[]>([]);
 const loading = ref(true);
 const placeholderText = ref("");
@@ -14,7 +15,7 @@ let charIndex = 0;
 
 const fetchCharacters = async () => {
   try {
-    const response = await fetch("https://rickandmortyapi.com/api/character");
+    const response = await fetch(`${BASE_URL}`);
     const data: ApiResponse = await response.json();
     characters.value = data.results;
     placeholders.value = characters.value.map((character) => character.name);
@@ -37,9 +38,7 @@ const findCharacter = async (e: any) => {
       return;
     }
 
-    const response = await fetch(
-      `https://rickandmortyapi.com/api/character/?name=${name}`
-    );
+    const response = await fetch(`${BASE_URL}/?name=${name}`);
     const data: ApiResponse = await response.json();
     characters.value = data.results;
     placeholders.value = characters.value.map((character) => character.name);
@@ -99,39 +98,41 @@ onUnmounted(() => {
     </section>
     <span v-if="characters.length < 1">Not found</span>
     <span v-if="loading">Loading...</span>
-    
-<section
-  v-else
-  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 min-h-[25vh] overflow-y-scroll bg-black w-full sm:w-[82%]"
->
-  <div
-    v-for="character in characters"
-    :key="character.id"
-    class="flex gap-2 justify-center items-center border rounded-lg border-blue-500 brightness-50 transition duration-300 ease-in-out hover:brightness-100 hover:border-green-500 h-[100%]"
-  >
-    <img :src="character.image" class="w-[50%] sm:w-[40%] md:w-[50%] rounded-full p-1" />
+
     <section
-      class="flex flex-col justify-center gap-3 text-left w-[50%] sm:w-[60%] md:w-[50%] h-[100%] p-2 child:flex child:flex-col"
+      v-else
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 min-h-[25vh] overflow-y-scroll bg-black w-full sm:w-[82%] pb-10"
     >
-      <p class="text-[1rem] font-bold">{{ character.name }}</p>
-
-      <p>
-        <span class="text-sm"> Origin </span>
-        <span class="font-bold"> {{ character.origin.name }} </span>
-      </p>
-      <p>
-        <span class="text-sm"> Last location </span>
-        <span class="font-bold"> {{ character.location.name }} </span>
-      </p>
-
-      <p>
-        <span class="hover:animate-pulse text-sm">
-          Appears on {{ character.episode.length }} episodes</span
+      <div
+        v-for="character in characters"
+        :key="character.id"
+        class="flex gap-2 justify-center items-center border rounded-lg border-blue-500 brightness-50 transition duration-300 ease-in-out hover:brightness-100 hover:border-green-500 h-[100%]"
+      >
+        <img
+          :src="character.image"
+          class="w-[50%] sm:w-[40%] md:w-[50%] rounded-full p-1"
+        />
+        <section
+          class="flex flex-col justify-center gap-3 text-left w-[50%] sm:w-[60%] md:w-[50%] h-[100%] p-2 child:flex child:flex-col"
         >
-      </p>
-    </section>
-  </div>
-</section>
+          <p class="text-[1rem] font-bold">{{ character.name }}</p>
 
+          <p>
+            <span class="text-sm"> Origin </span>
+            <span class="font-bold"> {{ character.origin.name }} </span>
+          </p>
+          <p>
+            <span class="text-sm"> Last location </span>
+            <span class="font-bold"> {{ character.location.name }} </span>
+          </p>
+
+          <p>
+            <span class="hover:animate-pulse text-sm">
+              Appears on {{ character.episode.length }} episodes</span
+            >
+          </p>
+        </section>
+      </div>
+    </section>
   </main>
 </template>
