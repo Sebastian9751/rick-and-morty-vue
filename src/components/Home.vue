@@ -8,31 +8,18 @@ import {
   fetchCharacters,
   findCharacter,
   characterPagination,
+  placeholderText,
+  startTypingPlaceholder,
+  stopTypingPlaceholder,
 } from "../services/CharacterService";
+
 import { ApiResponse } from "../Models";
 
-let placeholderText = ref("");
 let intervalId: any;
-let placeholders = ref<string[]>([]);
-let placeholderIndex = 0;
-let charIndex = 0;
 let page = 1;
 let isFinding = false;
 let name = "";
 let loadpage = ref(false);
-
-const typePlaceholder = () => {
-  if (placeholders.value.length === 0) return;
-  const currentPlaceholder = placeholders.value[placeholderIndex];
-  if (charIndex < currentPlaceholder.length) {
-    placeholderText.value += currentPlaceholder.charAt(charIndex);
-    charIndex++;
-  } else {
-    charIndex = 0;
-    placeholderIndex = (placeholderIndex + 1) % placeholders.value.length;
-    placeholderText.value = "";
-  }
-};
 
 const scrollContainer = ref<HTMLElement | null>(null);
 
@@ -64,7 +51,7 @@ const handleScroll = async () => {
 
 onMounted(() => {
   fetchCharacters(page);
-  intervalId = setInterval(typePlaceholder, 100);
+  intervalId = startTypingPlaceholder();
 
   if (scrollContainer.value) {
     scrollContainer.value.addEventListener("scroll", handleScroll);
@@ -72,7 +59,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  clearInterval(intervalId);
+  stopTypingPlaceholder(intervalId);
 
   if (scrollContainer.value) {
     scrollContainer.value.removeEventListener("scroll", handleScroll);
