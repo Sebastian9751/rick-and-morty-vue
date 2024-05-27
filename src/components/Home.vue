@@ -7,54 +7,21 @@ import {
   loading,
   fetchCharacters,
   findCharacter,
-  characterPagination,
-  placeholderText,
+  onScroll,
   startTypingPlaceholder,
   stopTypingPlaceholder,
-} from "../services/CharacterService";
-
-import { ApiResponse } from "../Models";
+  state,
+} from "../services/characters";
 
 let intervalId: any;
-let page = 1;
-let isFinding = false;
-let name = "";
-let loadpage = ref(false);
-
 const scrollContainer = ref<HTMLElement | null>(null);
 
-const handleScroll = async () => {
-  const container = scrollContainer.value;
-  if (container) {
-    const { scrollTop, scrollHeight, clientHeight } = container;
-    if (scrollTop + clientHeight >= scrollHeight) {
-      page++;
-      loadpage.value = true;
-      if (isFinding) {
-        const response = await characterPagination(page, name);
-
-        const data: ApiResponse = await response.json();
-
-        if (data.info.pages && page === data.info.pages) {
-          return;
-        }
-
-        characters.value = [...characters.value, ...data.results];
-      } else {
-        fetchCharacters(page);
-      }
-
-      loadpage.value = false;
-    }
-  }
-};
-
 onMounted(() => {
-  fetchCharacters(page);
+  fetchCharacters(state.page);
   intervalId = startTypingPlaceholder();
 
   if (scrollContainer.value) {
-    scrollContainer.value.addEventListener("scroll", handleScroll);
+    scrollContainer.value.addEventListener("scroll", onScroll);
   }
 });
 
@@ -62,7 +29,7 @@ onUnmounted(() => {
   stopTypingPlaceholder(intervalId);
 
   if (scrollContainer.value) {
-    scrollContainer.value.removeEventListener("scroll", handleScroll);
+    scrollContainer.value.removeEventListener("scroll", onScroll);
   }
 });
 </script>
@@ -87,7 +54,7 @@ onUnmounted(() => {
       <input
         class="text-center bg-[#18191A] rounded-lg focus:outline-none p-2"
         type="text"
-        :placeholder="placeholderText"
+        :placeholder="state.placeholderText"
         @input="findCharacter"
       />
     </section>
@@ -99,7 +66,7 @@ onUnmounted(() => {
     <section
       v-else
       ref="scrollContainer"
-      @scroll="handleScroll"
+      @scroll="onScroll"
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 min-h-[25vh] overflow-y-scroll bg-black w-full sm:w-[82%] pb-10"
     >
       <div
@@ -134,9 +101,9 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <div v-if="loadpage" class="w-11 absolute z-40 bottom-14 right-48">
+    <div v-if="state.loadpage" class="w-11 absolute z-40 bottom-14 right-48">
       <svg
-        class="text-blue-400 brightness-50 animate-spin w-[100%]"
+        class="text-blue-400 brightness-50 animate-spin w-[100%] delay-500"
         viewBox="0 0 64 64"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
