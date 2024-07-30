@@ -18,3 +18,5 @@ $ npm run dev
 
 
 ## Preview
+
+[![Rick And Morty video]( ) ](https://www.youtube.com/watch?v=LTzSAF1DUqQ)
